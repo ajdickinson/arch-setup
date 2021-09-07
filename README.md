@@ -56,7 +56,7 @@ ssh-keygen -t ed25519 -C "email@mail.com"
 This will prompt a few questions - follow in terminal. To add this SSSH key to the SSH agent use the following two commands:
 
 ```
-eval "($ssh-agent -s)"
+eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
 ```
 
@@ -79,7 +79,7 @@ Once you have the key in your clipboard, go to [GitHub](www.github.com) click on
 First thing I do is add the contents of this repo locally so I can use the scripts set up to install all my applications/packages. To do so I install the GitHub CLI (command line interface) so I can use my terminal. To install:
 
 ```
-sudo pacman -S github-cli
+trizen -S github-cli
 ```
 
 One must autheticate following the install. Run the following command and follow the directions to setup your account:
@@ -112,16 +112,53 @@ This should replace the config file that is generated during installation.
 
 ## 022 Polybar Config
 
-`Polybar` is a neat package that creates a customizable bar that is aesthetically pleasing and works well with i3. To install `polybar` use the command:
+`Polybar` is a neat package that creates a customizable status bar that is aesthetically pleasing and works well with i3. To install `polybar` use the command:
 
 ```
 trizen -S polybar
 ```
+
 Then copy my config file from `config` to `~/.config/polybar/config`
 
 ```
 cp arch-setup/config/polybar-config ~/.config/polybar/config
 ```
+
+Now the example polybar config file which my config file is based off of  requires some additional font packages. Install them with the two commands:
+
+```
+sudo pacman -S xorg-fonts-misc
+```
+
+```
+yay -S siji-git ttf-unifont
+```
+
+Now we must set up a launch script in the polybar config directory. Paste the following in a new shell script `~/.config/polybar/launch.sh`:
+
+```
+#!/usr/bin/env bash
+
+# Terminate already running bar instances
+killall -q polybar
+# If all your bars have ipc enabled, you can also use 
+# polybar-msg cmd quit
+
+# Launch bar1 and bar2
+echo "---" | tee -a /tmp/polybar1.log /tmp/polybar2.log
+polybar example 2>&1 | tee -a /tmp/polybar1.log & disown
+
+echo "Bars launched..."
+```
+Next we need to adjust permissions on the launch script using this command:
+
+```
+chmod +x $HOME/.config/polybar/launch.sh
+```
+
+Finally ensure the i3 configuration file has an `exec_always` command to start the polybar on sign in.
+ 
+
 
 # 02. Shell
 
@@ -166,7 +203,19 @@ To configure bluetooth to power on following each boot, change the config file `
 
 # R
 
+## CCache
+
+## OpenBlas
+
+## R packages
+
+## Radian
+
 # Python
+
+```
+trizen -S python-gdal python-yaml python-jinja python-psycopg2 python-owslib python-numpy python-pygments
+```
 
 # rsync
 
