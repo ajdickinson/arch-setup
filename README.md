@@ -25,8 +25,6 @@ cd trizen
 makepkg -si
 ```
 
-Alternatively run the bash script in this repository `install-01-trizen.sh`
-
 To prevent PKGBUILD edit prompts when installing packages with `trizen` - in the config file `~/.config/trizen/trizen.conf` set `noedit => 1`
 
 To enable parallel compiling to increase the speed at which packages compile set the `MAKEVARS` variable in `/etc/makepkg.conf` to `MAKEFLAGS="-j$(nproc)"`. All cores can now be used to compile new packages.
@@ -45,7 +43,13 @@ sudo mount -o remount, size = 20g,noatime /tmp
 
 `bash` is standard in most linux distrobutions. However, I am currently enjoying [`fish`](https://fishshell.com/) which seems to be easier on beginners.
 
-Still need to write up how I set fish to default shell in `.bashrc`
+To install the fish shell run the following command:
+
+```
+trizen -S fish
+```
+
+To set fish as default, simply add `fish` to the end of the `.bashrc` file. The `.bashrc` file runs every time terminal is opened.
 
 # 03. Apps
 
@@ -53,7 +57,58 @@ I am in the process of writing a shell script that will install all my standard 
 
 # 04. Git
 
-I am writing a shell script that sets my git config and ssh for a quicker setup
+Git comes installed on EndeavourOS. First we have to configure it by adding our username and email
+
+```
+git config --global user.name "ajdickinson"
+git config --global user.email "adickin3@uoregon.edu"
+```
+
+I like to setup SSH for git on all my machines. To generate a SSH key run the following command:
+
+```
+ssh-keygen -t ed25519 -C "adickin3@uoregon.edu"
+```
+This will prompt a few questions - follow in terminal. To add this SSSH key to the SSH agent use the following two commands:
+
+```
+eval "($ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+Running the first command in `fish` has resulted in an error on my system. To get around it, change back to bash and rerun it using `sh`
+
+Next we need to add our SSH key to GitHub so it is recognized. To do this I like to install `xclip` to easily copy the key right from the SSH key file.
+
+```
+trizen -S xclip
+```
+
+To copy the key to clipboard use the following command:
+
+```
+xclip -selection clipboard < ~/.ssh/id_ed25519.pub
+```
+
+Once you have the key in your clipboard, go to [GitHub](www.github.com) click on Settings > SSH and GPG Keys > New SSH Key or Add SSH Key. Paste with the key in clipboard and name it and click Add SSH Key.
+
+First thing I do is add the contents of this repo locally so I can use the scripts set up to install all my applications/packages. To do so I install the GitHub CLI (command line interface) so I can use my terminal. To install:
+
+```
+sudo pacman -S github-cli
+```
+
+One must autheticate following the install. Run the following command and follow the directions to setup your account:
+
+```
+gh auth login
+```
+
+Then to clone the `arch-setup` repo, use the following command
+
+```
+gh repo clone arch-setup
+```
 
 # 05. Bluetooth
 
