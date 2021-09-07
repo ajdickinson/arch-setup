@@ -1,1 +1,1 @@
-trizen -S blueberry ccache discord slack-desktop spotify gvim htop xprop xclip libreoffice-fresh gdal udunits postgis jdk-openjdk openjdk-src texlive-most pandoc pandoc-citeproc pandoc-crossref zotero code zathura rstudio-desktop-bin r-gert  
+trizen -S blueberry ccache discord slack-desktop spotify gvim htop xprop xclip libreoffice-fresh gdal udunits postgis jdk-openjdk openjdk-src texlive-most pandoc pandoc-citeproc pandoc-crossref zotero code zathura rstudio-desktop-bin r-gert themix-full-git
