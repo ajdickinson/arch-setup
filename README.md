@@ -1,13 +1,13 @@
-This repository is a guide/documentation of my current linux set to streamline any future installations. This repo is public but in rough rough shape. This README will change once I have the shell scripts up and running.
+This repository is a guide/documentation of my current linux set to streamline any future installations. If anything this repo is simple a record of how I set up my machines so I do not forget. So far this README is in rough rough shape but will change once I find more time to add to it. Hopefully in a few years as I add more and more edits this document will be useful for others as well. As of right now this page is mostly just setup instructions that I have borrowed from elsewhere that I liked and wanted to keep track of. It also includes things that were annoying to setup the first time (e.g. bluetooth) and are a record of how I set things up for future reference.
 
 Based off the following references:
 - [Grant Mcdermott's arch tips repo](https://github.com/grantmcdermott/arch-tips)
 - [Patrick Schratz Arch Linux setup guide for data science](https://pat-s.me/post/arch-install-guide-for-r/)
 - [Anton Beloglazov's old arch cofig repo](https://github.com/beloglazov/arch-config)
 
-Currently, instead of installing Arch Linux the traditional way, I am using the [EndeavourOS](https://endeavouros.com/) distrobution. EndeavourOS is an Arch-based linux distrobution that is much easier to install and was recommended to me by Grant McDermott in his Data Science for Economists class at the University of Oregon.
+As opposed to a traditional Arch Linux installation I am using the [EndeavourOS](https://endeavouros.com/) distribution. EndeavourOS is an Arch-based linux distribution that is much easier to install and was recommended to me by Grant McDermott in his Data Science for Economists class at the University of Oregon.
 
-Currently I have installed EndeavourOS with two desktop environments: Gnome and i3wm. Gnome is more traditional and similar to MacOS but i3 is cool and I have enjoyed messing around with it. Currently I am mostly just using i3 but I wanted Gnome installed for more stability just in case.
+Currently I have installed EndeavourOS with i3wm which is a simple window manager that I have enjoyed using. Before I used Gnome and recommend it. It is more traditional and similar to MacOS.
 
 # 00. Installation
 
@@ -35,39 +35,23 @@ Finally, if your system only has 8 GB of RAM, Patrick Schratz recommends that yo
 sudo mount -o remount, size = 20g,noatime /tmp
 ```
 
-**CAUTION: Try to avoid installing python libraries using `pip` if the can be installed from AUR instead. This may mess up some dependcies and give you a hard time. If the package is not available on AUR then you should be good- for example: radian for R console in terminal is not available on AUR so I installed via `pip`.**
+**CAUTION: Try to avoid installing python libraries using `pip` if the can be installed from pacman instead. This may mess up some dependcies and give you a hard time. If the package is not available on AUR then you should be good- for example: radian for R console in terminal is not available on AUR so I installed via `pip`.** 
 
- 
+# 02. Git
 
-# 02. Shell
+Git comes installed on EndeavourOS and I like to configure it first so I can quickly access this repo to clone onto my fresh install. Most of these instructions were found on the GitHub documentation.
 
-`bash` is standard in most linux distrobutions. However, I am currently enjoying [`fish`](https://fishshell.com/) which seems to be easier on beginners.
-
-To install the fish shell run the following command:
+First we have to configure it by adding username and email
 
 ```
-trizen -S fish
-```
-
-To set fish as default, simply add `fish` to the end of the `.bashrc` file. The `.bashrc` file runs every time terminal is opened.
-
-# 03. Apps
-
-I am in the process of writing a shell script that will install all my standard apps, packages, and libraries with one command.
-
-# 04. Git
-
-Git comes installed on EndeavourOS. First we have to configure it by adding our username and email
-
-```
-git config --global user.name "ajdickinson"
-git config --global user.email "adickin3@uoregon.edu"
+git config --global user.name "username"
+git config --global user.email "email@mail.com"
 ```
 
 I like to setup SSH for git on all my machines. To generate a SSH key run the following command:
 
 ```
-ssh-keygen -t ed25519 -C "adickin3@uoregon.edu"
+ssh-keygen -t ed25519 -C "email@mail.com"
 ```
 This will prompt a few questions - follow in terminal. To add this SSSH key to the SSH agent use the following two commands:
 
@@ -104,15 +88,89 @@ One must autheticate following the install. Run the following command and follow
 gh auth login
 ```
 
-Then to clone the `arch-setup` repo, use the following command
+First make sure to change your directory to stay organized. I like to keep my `arch-setup` folder in `Documents`. To clone the `arch-setup` repo, use the following command
 
 ```
 gh repo clone arch-setup
 ```
 
+# 02 Desktop setup
+
+I have some config files that setup my custom desktop. These are just personal preference.
+
+The `config` folder contains the config files.
+
+## 021 i3 Config
+
+Move the `i3-config` file from the `config` folder to `~/.config/i3/` and rename as `config`
+
+```
+cp ./config/i3-config ~/.config/i3/config
+```
+
+This should replace the config file that is generated during installation.
+
+## 022 Polybar Config
+
+`Polybar` is a neat package that creates a customizable bar that is aesthetically pleasing and works well with i3. To install `polybar` use the command:
+
+```
+trizen -S polybar
+```
+Then copy my config file from `config` to `~/.config/polybar/config`
+
+```
+cp arch-setup/config/polybar-config ~/.config/polybar/config
+```
+
+# 02. Shell
+
+`bash` is standard in most linux distrobutions. However, I am currently enjoying [`fish`](https://fishshell.com/) which seems to be easier on beginners.
+
+To install the fish shell run the following command:
+
+```
+trizen -S fish
+```
+
+To set fish as default, simply add `fish` to the end of the `.bashrc` file. The `.bashrc` file runs every time terminal is opened.
+
+I need to add urxvt installation and configuration
+
+#03. Apps
+
+I am in the process of writing a shell script that will install all my standard apps, packages, and libraries with one or more commands.
+
+
+
 # 05. Bluetooth
 
-Setting up bluetooth is kinda a bitch. I have a markdown file with instructions that I need to add here.
+To setup bluetooth, we need a few packages: `bluez` (preinstalled), `bluez-utils` (preinstalled), and `blueberry`. If you have run the shell script titled `install-03-apps.sh` then you should have these packages already.
+
+My linux workstation uses a usb bluetooth adaptor. To ensure the `btusb` kernel module is loaded, use the following command
+
+```
+lsmod | grep btusb
+```
+
+Next to ensure that bluetooth is started and enabled the following run the following:
+
+```
+systemctl start bluetooth.service
+systemctl enable bluetooth.service
+```
+
+To configure bluetooth to power on following each boot, change the config file `/etc/bluetooth/main.conf` such that `AutoEnable=true`
+
+
+
+# R
+
+# Python
+
+# rsync
+
+# SSH
 
 # 06. Fonts
 
