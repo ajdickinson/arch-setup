@@ -199,7 +199,16 @@ systemctl enable bluetooth.service
 
 To configure bluetooth to power on following each boot, change the config file `/etc/bluetooth/main.conf` such that `AutoEnable=true`
 
+# Vim
 
+To map `Caps Lock` as `Esc` add the following two lines to the end of `.vimrc`
+
+```
+au VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
+```
+
+[Code from](https://stackoverflow.com/questions/2176532/how-to-map-caps-lock-key-in-vim)
 
 # R
 
@@ -216,7 +225,11 @@ To configure bluetooth to power on following each boot, change the config file `
 ```
 trizen -S python-gdal python-yaml python-jinja python-psycopg2 python-owslib python-numpy python-pygments
 ```
+# Google cloud computing
 
+This info is pulled directly from Grant Mcdermott's [lecture notes](https://github.com/uo-ec607/)
+
+First you must go to the GCE dashboard for the project you are working on. To generate a Google Cloud Service Account key, 
 # rsync
 
 # SSH
@@ -225,3 +238,17 @@ trizen -S python-gdal python-yaml python-jinja python-psycopg2 python-owslib pyt
 
 Writing a shell script that installs all my favorite fonts.
 
+# Email
+
+`mailspring` seems pretty neat: `trizen -S mailspring`. First time installing I ran into an error which seemed to be resolved by `trizen -S gnome-keyring`. 
+
+To connect to my university email I used the following [instructions](https://service.uoregon.edu/TDClient/2030/Portal/KB/ArticleDet?ID=31128) which worked first try when I added my email as the username.
+
+**Note: I've heard `mailspring` uses a lot of battery so I did not install it on my laptop**
+
+
+Roses are red
+
+Violets are blue
+
+Sudo pacman -Syu
